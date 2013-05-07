@@ -9,3 +9,5 @@
 la r4 e' una r69 con commentati statistiche ed allarmi
 ----
 la r5 e' una r69 commentata come la r4 compilata con studio 6 con -02 o -03
+----
+la r9 e' r111-16 , partendo dalla r111-15 si sistema le coordinate gps, si aumenta il renfresh a 2hz e si compila con 5.1 con -Os

@@ -7,3 +7,4 @@
 = Details =
 
 la r4 e' una r69 con commentati statistiche ed allarmi
+la r5 e' una r69 commentata come la r4 compilata con studio 6 con -02 o -03

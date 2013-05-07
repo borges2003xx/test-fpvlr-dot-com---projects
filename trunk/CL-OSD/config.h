@@ -130,7 +130,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.*
 #define SHOW_GPS_IN_FLIGHT //** Always display coords, to recover lost aircraft (cannot be used together with TEXT_COMPASS_ENABLED)
 
 //User data
-#define TEXT_CALL_SIGN "r111-16" //Set this to your call sign.
+#define TEXT_CALL_SIGN "" //Set this to your call sign.
 
 //VBI (Only for evaluation and development, not finished!)
 //#define VBI_TESTING_ENABLED

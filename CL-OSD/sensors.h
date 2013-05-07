@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.*
 
 static uint8_t gSensorBatteryPercentage = 0;
 static uint8_t gSensorRssi = 0;
-static uint8_t gSensorCompassDirection = 0;
+
 static uint8_t gSensorCurrent = 0;
 static uint32_t gSensorPowerUsage = 0;
 static TAnalogValue gSensorVoltage1 = {};
@@ -65,18 +65,12 @@ static void updateSensors() {
 #ifdef SENSOR_VOLTAGE_2_ENABLED
     gSensorVoltage2 = gAnalogInputs[ANALOG_IN_2];
 #endif
-#ifdef SENSOR_BATTERY_PERCENTAGE_ENABLED
-   gSensorBatteryPercentage = calcGenericVoltageLevel(SENSOR_BATTERY_PERCENTAGE_INPUT, BATT_MIN_VOLTAGE_INT, BATT_MAX_VOLTAGE_INT, 0, 100);
-#endif 
 #ifdef SENSOR_RSSI_ENABLED
 #ifdef SENSOR_RSSI_REVERSED
    gSensorRssi = calcGenericVoltageLevelReverse(SENSOR_RSSI_INPUT, RSSI_MIN_VOLTAGE_INT, RSSI_MAX_VOLTAGE_INT, 0, 100);
 #else
    gSensorRssi = calcGenericVoltageLevel(SENSOR_RSSI_INPUT, RSSI_MIN_VOLTAGE_INT, RSSI_MAX_VOLTAGE_INT, 0, 100);
 #endif
-#endif
-#ifdef SENSOR_COMPASS_ENABLED
-   gSensorCompassDirection = calcGenericVoltageLevel(SENSOR_COMPASS_INPUT, COMPASS_MIN_VOLTAGE_INT, COMPASS_MAX_VOLTAGE_INT, 0, 359);
 #endif
 #ifdef SENSOR_CURRENT_ENABLED
    gSensorCurrent = calcGenericVoltageLevel(SENSOR_CURRENT_INPUT, CURRENT_MIN_VOLTAGE_INT, CURRENT_MAX_VOLTAGE_INT, 0, SENSOR_CURRENT_MAX_AMPS);

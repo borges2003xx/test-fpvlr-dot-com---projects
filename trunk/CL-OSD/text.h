@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.*
 
 #include <stdio.h>
 #include <util/delay.h>
+#include <string.h>
 
 #include "config.h"
 
@@ -35,6 +36,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.*
 #include "home.h"
 #include "global.h"
 #include "commonutils.h"
+#include "sensors.h"
 
 #define TEXT_ALIGN_LEFT 0
 #define TEXT_ALIGN_RIGHT 1
@@ -171,8 +173,22 @@ static uint8_t printNumber(char* const str, uint8_t pos, int32_t number) {
 	return pos+length;
 }
 
+static uint8_t printFloatNumber(char* const str, uint8_t pos, int32_t numberLow, int32_t numberHigh) {
+	pos = printNumber(str, pos, numberHigh);
+	str[pos++] = '.';
+	if(numberLow < 10) {
+		str[pos++] = '0';
+	}
+	return printNumber(str, pos, numberLow);
+}
+
 static uint8_t printNumberWithUnit(char* const str, uint8_t pos, int32_t number, const char* unit) {
 	pos = printNumber(str, pos, number);
+	return printText(str, pos, unit);
+}
+
+static uint8_t printFloatNumberWithUnit(char* const str, uint8_t pos, int32_t numberLow, int32_t numberHigh, const char* unit) {
+	pos = printFloatNumber(str, pos, numberLow, numberHigh);
 	return printText(str, pos, unit);
 }
 
@@ -196,21 +212,16 @@ static uint8_t printTime(char* const str, uint8_t pos) {
 static uint8_t printAdc(char* const str, uint8_t pos, const uint8_t adcInput) {
 	uint8_t low = gAnalogInputs[adcInput].low;
 	uint8_t high = gAnalogInputs[adcInput].high;
-	pos = printNumber(str, pos, high);
-	str[pos++] = '.';
-	if(low < 10) {
-		str[pos++] = '0';
-	}
-	return printNumberWithUnit(str, pos, low, "V");		
+	return printFloatNumberWithUnit(str, pos, low, high, "V");		
 }
 
 static uint8_t printRssiLevel(char* const str, uint8_t pos, const uint8_t adcInput) {
-	uint8_t rssiLevel = calcRssiLevel(adcInput);
+	uint8_t rssiLevel = gSensorRssi;
 	return printNumberWithUnit(str, pos, rssiLevel, "%");
 }
 
 static uint8_t printBatterLevel(char* const str, uint8_t pos, const uint8_t adcInput) {
-	uint8_t batterLevel = calcBatteryLevel(adcInput);
+	uint8_t batterLevel = gSensorBatteryPercentage;
 	return printNumberWithUnit(str, pos, batterLevel, "%");
 }
 
@@ -223,15 +234,6 @@ static uint8_t printGpsNumber(char* const str, uint8_t pos, int32_t number, uint
 #endif
 	  return pos;
   }
-	
-	uint8_t hour = number / 1000000;
-#ifdef GPS_GOOGLE_FORMAT
-  uint32_t min = number - (hour * 1000000);
-  min = (min * 100)/60;
-#else
-	uint8_t min = (number - (hour * 1000000)) / 10000; //Get minute part
-  uint32_t minDecimal = number % 10000; //Get minute decimal part
-#endif
   
   const char* str2;
   if (numberLat) {
@@ -240,13 +242,46 @@ static uint8_t printGpsNumber(char* const str, uint8_t pos, int32_t number, uint
   else {
 	  str2 = number > 0 ? "E" : "W";
   }
+  
+  number = absi32(number);
+ 
+	
+	uint8_t hour = number / 1000000;
+#ifdef GPS_GOOGLE_FORMAT
+  uint32_t min = number - (hour * 1000000);
+  min = (min * 100)/60;
+  //Calibrate Google GPS Coords
+  if (numberLat) {
+	  min = min + FUDGE_GOOGLE_LAT;    //Local calibration of Google GPS Lat (Truglodite)
+  }
+  else {
+	  min = min + FUDGE_GOOGLE_LON;    //Local calibration of Google GPS Long (Truglodite)
+  }
+#else
+	uint8_t min = (number - (hour * 1000000)) / 10000; //Get minute part
+  uint32_t minDecimal = number % 10000; //Get minute decimal part
+#endif
 
 #ifdef GPS_GOOGLE_FORMAT
   pos = printNumberWithUnit(str, pos, hour, ".");
+  if (min < 10000) { // Added with inspiration from Joern
+	  uint32_t temp = min;
+		while (temp < 10000) {
+			temp *= 10;
+			pos = printNumber(str, pos, 0);
+		}
+  }
   return printNumberWithUnit(str, pos, min, str2);
 #else
   pos = printNumberWithUnit(str, pos, hour, ":");
   pos = printNumberWithUnit(str, pos, min, ".");
+  if (minDecimal < 10000) { // Added with inspiration from Joern
+	  uint32_t temp = minDecimal;
+		while (temp < 10000) {
+			temp *= 10;
+			pos = printNumber(str, pos, 0);
+		}
+  }
   return printNumberWithUnit(str, pos, minDecimal, str2);
 #endif
 }
@@ -286,7 +321,41 @@ static uint8_t printCompass(char* const str, uint8_t pos, uint16_t angle, uint8_
     }
   }
   return pos + length;
-}  
+}
+
+#ifdef VBI_TESTING_ENABLED
+static uint8_t printVbiData(char* const str, uint8_t pos, uint8_t data) {
+	uint8_t temp = data;
+	pos = printText(str, pos, "\153");
+	for (uint8_t i = 8; i != 0; i--) {
+		if (temp & 0x80) {
+	    pos = printText(str, pos, "\153");
+		  
+		}
+		else {
+			//pos = printText(str, pos, "0");
+			pos++;
+		}
+		temp <<= 1;
+	}
+	//pos = printText(str, pos, "#");
+	return pos;
+}
+
+static uint8_t printVbiString(char* const str, uint8_t pos, char* string) {
+	uint8_t length = strlen(string);
+	static uint8_t textPos = 0;
+	for (uint8_t i = 3; i != 0; i--) {
+	  pos = printVbiData(str, pos, string[textPos]);
+	  pos++;
+	  textPos++;
+	  if (textPos >= length) {
+		  textPos = 0;
+	  }
+	}	  
+	return pos;
+}
+#endif //VBI_TESTING_ENABLED
 
 static void drawTextLine(uint8_t textId)
 {

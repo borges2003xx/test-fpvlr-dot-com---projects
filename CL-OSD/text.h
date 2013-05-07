@@ -60,20 +60,20 @@ static void clearText(uint8_t textId) {
 	}
 }
 
-static void clearTextPixmap() {
+/*[static void clearTextPixmap() {
 	for (uint16_t j = 0; j < TEXT_LINE_MAX_CHARS*TEXT_CHAR_HEIGHT; ++j) {
 		gTextPixmap[j] = 0;
 	}
-}
+}*/
 
 #ifdef TEXT_INVERTED_ENABLED
-static void clearTextInverted() {
+/*static void clearTextInverted() {
 	for (uint8_t i = 0; i < TEXT_LINES; ++i) {
 	  for (uint8_t j = 0; j < TEXT_LINE_MAX_CHARS/8; ++j) {
 	    gTextInverted[i][j] = 0;
 	  }
 	}	  
-}
+}*/
 
 static void setCharInverted(uint8_t line, uint8_t pos, uint8_t bitValue) {
 	uint8_t bytePos = pos/8;
@@ -220,10 +220,10 @@ static uint8_t printRssiLevel(char* const str, uint8_t pos, const uint8_t adcInp
 	return printNumberWithUnit(str, pos, rssiLevel, "%");
 }
 
-static uint8_t printBatterLevel(char* const str, uint8_t pos, const uint8_t adcInput) {
+/*static uint8_t printBatterLevel(char* const str, uint8_t pos, const uint8_t adcInput) {
 	uint8_t batterLevel = gSensorBatteryPercentage;
 	return printNumberWithUnit(str, pos, batterLevel, "%");
-}
+}*/
 
 static uint8_t printGpsNumber(char* const str, uint8_t pos, int32_t number, uint8_t numberLat) {
 	if (number == 0) {
@@ -286,12 +286,12 @@ static uint8_t printGpsNumber(char* const str, uint8_t pos, int32_t number, uint
 #endif
 }
 
-static uint8_t printCompassArrow(char* const str, uint8_t pos, uint16_t angle, uint8_t length) {
+/*static uint8_t printCompassArrow(char* const str, uint8_t pos, uint16_t angle, uint8_t length) {
   printText(str, pos + ((length*10)+5)/20, "\155");
   return pos + length;
-}
+}*/
 
-static uint8_t printCompass(char* const str, uint8_t pos, uint16_t angle, uint8_t length) {
+/*static uint8_t printCompass(char* const str, uint8_t pos, uint16_t angle, uint8_t length) {
   // Made by superjelli - Changed a bit by me
   if(angle % 10 < 5) {
     angle -= (angle % 10);
@@ -321,7 +321,7 @@ static uint8_t printCompass(char* const str, uint8_t pos, uint16_t angle, uint8_
     }
   }
   return pos + length;
-}
+}*/
 
 #ifdef VBI_TESTING_ENABLED
 static uint8_t printVbiData(char* const str, uint8_t pos, uint8_t data) {

@@ -118,13 +118,15 @@ static void updateText(uint8_t textId) {
   else if (textId == 3) {
 #ifdef GPS_ENABLED
         printText(gText[textId], pos, "ALT"); //ALTITUDE
-	 if (altitudeArrow == 1) 
+/*	 if (altitudeArrow == 1) 
 	      pos = printText(gText[textId], 5, "\154");
 		  
      else if (altitudeArrow == -1) 
 	      pos = printText(gText[textId], 5, "\155");
+	  
 		  
 	 else pos = printText(gText[textId], 5, "=");
+*/	 
 	
 		 pos = printNumber(gText[textId], 7 , gGpsLastValidData.pos.altitude - gHomePos.altitude); // Altitude
 	   		

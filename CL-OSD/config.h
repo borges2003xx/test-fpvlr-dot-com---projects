@@ -73,19 +73,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.*
 //#define GPS_GOOGLE_FORMAT
 
 //Alarms (Comment to disable)
-//#define ALARM_BATT1_LOW 5.00
-//#define ALARM_BATT2_LOW 0.00
+#define ALARM_BATT1_LOW 5.00
+#define ALARM_BATT2_LOW 0.00
 //#define ALARM_RSSI_LOW 50
 //#define ALARM_SPEED_HIGH 200
-//#define ALARM_ALTITUDE_LOW 0
-//#define ALARM_ALTITUDE_HIGH 5000
-//#define ALARM_DISTANCE_HIGH 10000
+#define ALARM_ALTITUDE_LOW 0
+#define ALARM_ALTITUDE_HIGH 5000
+#define ALARM_DISTANCE_HIGH 10000
 
 //Pre and post flight info
 #define INFO_MIN_SPEED_SHOW 3
 
 //User data
-#define TEXT_CALLSIGN ""
+#define TEXT_CALLSIGN "MU"
 
 //Time
 //#define TIME_HOUR_ENABLED

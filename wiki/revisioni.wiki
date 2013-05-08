@@ -15,3 +15,5 @@ la r9 e' r111-16 , partendo dalla r111-15 si sistema le coordinate gps, si aumen
 la r11 e' versione della r111-16 senza freccia su e giu ma compilata con la 5.1 con -02
 ----
 la r14 e una versione definitiva dimagrita compilata con 5.1 con coordinate corrette del gps da dispetto con -Os
+----
+la r16 e' una versione definitiva compilata con 5.1 e dimagrita ancora da poter essere compilata da -O2

@@ -20,11 +20,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.*
 
 #include "adc.h"
 
-//static uint8_t gSensorBatteryPercentage = 0;
+static uint8_t gSensorBatteryPercentage = 0;
 static uint8_t gSensorRssi = 0;
-
-//static uint8_t gSensorCurrent = 0;
-//static uint32_t gSensorPowerUsage = 0;
+static uint8_t gSensorCompassDirection = 0;
+static uint8_t gSensorCurrent = 0;
+static uint32_t gSensorPowerUsage = 0;
 static TAnalogValue gSensorVoltage1 = {};
 static TAnalogValue gSensorVoltage2 = {};
 
@@ -53,11 +53,11 @@ static uint8_t calcGenericVoltageLevel(uint8_t adcInput, uint16_t inMin, uint16_
 	return level;
 }
 
-/*static uint8_t calcGenericVoltageLevelReverse(uint8_t adcInput, uint16_t inMin, uint16_t inMax, uint16_t outMin, uint16_t outMax) {
+static uint8_t calcGenericVoltageLevelReverse(uint8_t adcInput, uint16_t inMin, uint16_t inMax, uint16_t outMin, uint16_t outMax) {
 	uint16_t value = calcGenericVoltageLevel(adcInput, inMin, inMax, outMin, outMax);
 	return outMax - value + outMin;
 }
-*/
+
 static void updateSensors() {
 #ifdef SENSOR_VOLTAGE_1_ENABLED
     gSensorVoltage1 = gAnalogInputs[ANALOG_IN_1];
@@ -65,12 +65,18 @@ static void updateSensors() {
 #ifdef SENSOR_VOLTAGE_2_ENABLED
     gSensorVoltage2 = gAnalogInputs[ANALOG_IN_2];
 #endif
+#ifdef SENSOR_BATTERY_PERCENTAGE_ENABLED
+   gSensorBatteryPercentage = calcGenericVoltageLevel(SENSOR_BATTERY_PERCENTAGE_INPUT, BATT_MIN_VOLTAGE_INT, BATT_MAX_VOLTAGE_INT, 0, 100);
+#endif 
 #ifdef SENSOR_RSSI_ENABLED
 #ifdef SENSOR_RSSI_REVERSED
    gSensorRssi = calcGenericVoltageLevelReverse(SENSOR_RSSI_INPUT, RSSI_MIN_VOLTAGE_INT, RSSI_MAX_VOLTAGE_INT, 0, 100);
 #else
    gSensorRssi = calcGenericVoltageLevel(SENSOR_RSSI_INPUT, RSSI_MIN_VOLTAGE_INT, RSSI_MAX_VOLTAGE_INT, 0, 100);
 #endif
+#endif
+#ifdef SENSOR_COMPASS_ENABLED
+   gSensorCompassDirection = calcGenericVoltageLevel(SENSOR_COMPASS_INPUT, COMPASS_MIN_VOLTAGE_INT, COMPASS_MAX_VOLTAGE_INT, 0, 359);
 #endif
 #ifdef SENSOR_CURRENT_ENABLED
    gSensorCurrent = calcGenericVoltageLevel(SENSOR_CURRENT_INPUT, CURRENT_MIN_VOLTAGE_INT, CURRENT_MAX_VOLTAGE_INT, 0, SENSOR_CURRENT_MAX_AMPS);

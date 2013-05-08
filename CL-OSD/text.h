@@ -67,13 +67,13 @@ static void clearText(uint8_t textId) {
 }*/
 
 #ifdef TEXT_INVERTED_ENABLED
-static void clearTextInverted() {
+/*static void clearTextInverted() {
 	for (uint8_t i = 0; i < TEXT_LINES; ++i) {
 	  for (uint8_t j = 0; j < TEXT_LINE_MAX_CHARS/8; ++j) {
 	    gTextInverted[i][j] = 0;
 	  }
 	}	  
-}
+}*/
 
 static void setCharInverted(uint8_t line, uint8_t pos, uint8_t bitValue) {
 	uint8_t bytePos = pos/8;

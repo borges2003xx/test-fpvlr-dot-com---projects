@@ -23,3 +23,5 @@ la r16 e' una versione definitiva compilata con 5.1 e dimagrita ancora da poter 
 la r18 :post prova campo si reininizia a costruire. si parte dalla r9 che e' una r111, si compila con il 5.1 con -Os. si sono corrette coordinate gps e renfresh come da dispetto 77. con questo si parte dalle serie 2.0
 ----
 la r20 e' una r19 con le coordinate gps corrette dalla correzione di dispetto. e' una r111-2.0.1
+----
+la r23 e una versione r69-2.0 di irun4fun compilata con il 5.1 -Os

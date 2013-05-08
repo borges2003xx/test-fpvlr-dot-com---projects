@@ -60,20 +60,20 @@ static void clearText(uint8_t textId) {
 	}
 }
 
-/*static void clearTextPixmap() {
+/*[static void clearTextPixmap() {
 	for (uint16_t j = 0; j < TEXT_LINE_MAX_CHARS*TEXT_CHAR_HEIGHT; ++j) {
 		gTextPixmap[j] = 0;
 	}
 }*/
 
-#ifdef TEXT_INVERTED_ENABLED
-/*static void clearTextInverted() {
+/*#ifdef TEXT_INVERTED_ENABLED
+static void clearTextInverted() {
 	for (uint8_t i = 0; i < TEXT_LINES; ++i) {
 	  for (uint8_t j = 0; j < TEXT_LINE_MAX_CHARS/8; ++j) {
 	    gTextInverted[i][j] = 0;
 	  }
 	}	  
-}*/
+}
 
 static void setCharInverted(uint8_t line, uint8_t pos, uint8_t bitValue) {
 	uint8_t bytePos = pos/8;
@@ -98,6 +98,7 @@ static uint8_t charInverted(uint8_t line, uint8_t pos) {
 	return 0;
 }
 #endif // TEXT_INVERTED_ENABLED
+*/
 
 static void updateTextCharStartPos(uint8_t textId) {
 	for (uint8_t j = 0; j < TEXT_LINE_MAX_CHARS; ++j) {
@@ -136,11 +137,13 @@ static void updateTextPixmap(uint8_t textId) {
 
 	  for (uint8_t i = 0; i < TEXT_CHAR_HEIGHT; i++) {
 
+
 #ifdef TEXT_INVERTED_ENABLED
 		if (charInverted(textId, j)) {
 		  gTextLastCharBuffer[i] = ~gTextLastCharBuffer[i];
 		}
 #endif // TEXT_INVERTED_ENABLED
+
 
       gTextPixmap[j + (i*TEXT_LINE_MAX_CHARS)] = gTextLastCharBuffer[i];
 	  }		  
@@ -291,8 +294,7 @@ static uint8_t printGpsNumber(char* const str, uint8_t pos, int32_t number, uint
   return pos + length;
 }*/
 
-/*
-  static uint8_t printCompass(char* const str, uint8_t pos, uint16_t angle, uint8_t length) {
+/*static uint8_t printCompass(char* const str, uint8_t pos, uint16_t angle, uint8_t length) {
   // Made by superjelli - Changed a bit by me
   if(angle % 10 < 5) {
     angle -= (angle % 10);
@@ -322,8 +324,7 @@ static uint8_t printGpsNumber(char* const str, uint8_t pos, int32_t number, uint
     }
   }
   return pos + length;
-}
-*/
+}*/
 
 #ifdef VBI_TESTING_ENABLED
 static uint8_t printVbiData(char* const str, uint8_t pos, uint8_t data) {

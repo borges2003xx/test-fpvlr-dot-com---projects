@@ -42,7 +42,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.*
 //Alarms (Comment to disable)
 #define ALARM_BATT1_LOW 10.00 //Warn if below this level (in volt)
 #define ALARM_BATT2_LOW 10.00 //Warn if below this level (in volt)
-#define ALARM_RSSI_LOW 30 //Warn if below this level (in %)
+//#define ALARM_RSSI_LOW 30 //Warn if below this level (in %)
 //#define ALARM_SPEED_HIGH 200 //Warn if above this level (in kmph/mph)
 //#define ALARM_ALTITUDE_LOW 0 //Warn if below this level (in meters/feet)
 //#define ALARM_ALTITUDE_HIGH 5000 //Warn if above this level (in meters/feet)

@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.*
 #ifndef LAYOUT_H_
 #define LAYOUT_H_
 
+#include "statistics.h"
 #include "alarms.h"
 
 #ifdef TEXT_ENABLED
@@ -25,142 +26,124 @@ static void updateText(uint8_t textId) {
   //testPrintDebugInfo();
   uint8_t pos = 0;
 
-  // --------------- TEXT LINE 1 (From top) -----------------------
 	if (textId == 0) {
-#ifdef SENSOR_VOLTAGE_1_ENABLED
-		printText(gText[textId], pos+ 1, "\1521"); //Battery symbol + '1'
-#endif
-		pos += 4 ;
-
-#ifdef SENSOR_VOLTAGE_1_ENABLED
-		 if (!gAlarmBatt1 || gBlink1Hz) {
-			 printAdc(gText[textId], pos , ANALOG_IN_1); // Voltage 1
-		 }
-#endif
-		 pos += 8;
-
-#ifdef SENSOR_RSSI_ENABLED
-     if (gSensorRssi > 0) {
-	  printText(gText[textId], pos, "\151"); //Antenna symbol (RSSI)
-	  }
-#endif
-         pos += 6 ;
-		 
-#ifdef GPS_ENABLED
-
-  		  pos = printText(gText[textId], pos, "\150"); // Satellites symbol
-		
-	#endif
-	  pos += 2 ;	  
-	  
-
-#ifdef SHOW_GPS_IN_FLIGHT
-	 printGpsNumber(gText[textId], pos, gGpsLastValidData.pos.latitude, 1); 
-#endif	
+		pos = printText(gText[textId], 0, "\1521");
+#if ANALOG_IN_NUMBER == 2
+    pos = printText(gText[textId], 7, "\151");
+#else // ANALOG_IN_NUMBER > 2
+    pos = printText(gText[textId], 7, "\1522");
+	  pos = printText(gText[textId], 14, "\151");    
+#endif //ANALOG_IN_NUMBER == 2
+#ifdef TIME_HOUR_ENABLED
+	  pos = printTime(gText[textId], TEXT_LINE_MAX_CHARS-9);
+#else
+    pos = printTime(gText[textId], TEXT_LINE_MAX_CHARS-6);
+#endif //TIME_HOUR_ENABLED
   }
-  // --------------- TEXT LINE 2 (From top) -----------------------
   else if (textId == 1) {
-	  
-#ifdef SENSOR_VOLTAGE_2_ENABLED
-		if(((gSensorVoltage2.high * 100) + gSensorVoltage2.low) > 0) {
-		printText(gText[textId], pos+ 1, "\1522"); //Battery symbol + '2'
-		}
-#endif		
-		pos += 4 ;
-#ifdef SENSOR_VOLTAGE_2_ENABLED
-		 if(((gSensorVoltage2.high * 100) + gSensorVoltage2.low) > 0) {
-     if (!gAlarmBatt2 || gBlink1Hz) {
-			 printAdc(gText[textId], pos , ANALOG_IN_2); // Voltage 2
-		 }
-		  }
-#endif
-		 pos += 8;
-
-#ifdef SENSOR_RSSI_ENABLED
-      if ((!gAlarmRssi || gBlink1Hz ) && gSensorRssi > 0)
-	    printRssiLevel(gText[textId], pos, SENSOR_RSSI_INPUT); 
-#endif
-	  pos += 6 ;
-
-
-#ifdef GPS_ENABLED
-    if (gGpsLastValidData.fix) {
-		printNumber(gText[textId], pos, gGpsLastValidData.sats); 
-		}
-		else {			
-		printText(gText[textId], pos, "-");
-		
+	  printText(gText[textId], TEXT_LINE_MAX_CHARS-1-strlen(TEXT_CALLSIGN), TEXT_CALLSIGN);
+	  if (!gAlarmBatt1 || gBlink1Hz) {
+	    pos = printAdc(gText[textId], 0, ANALOG_IN_1);
+	  }		
+#if ANALOG_IN_NUMBER == 2
+    if (!gAlarmRssi || gBlink1Hz) {
+      pos = printRssiLevel(gText[textId], 7, ANALOG_IN_2);
+	  }	  
+#else // ANALOG_IN_NUMBER > 2
+    if (!gAlarmBatt2 || gBlink1Hz) {
+      pos = printAdc(gText[textId], 7, ANALOG_IN_2);
 	  }
-#endif
-	  pos += 3 ;	  
-	  
-#ifdef SHOW_GPS_IN_FLIGHT
-	 printGpsNumber(gText[textId], pos, gGpsLastValidData.pos.longitude, 0); 
-#endif	
+	  if (!gAlarmRssi || gBlink1Hz) {
+	    pos = printRssiLevel(gText[textId], 14, ANALOG_IN_3);
+	  }
+#endif //ANALOG_IN_NUMBER == 2
+
   }
-  // --------------- TEXT LINE 3 (From top) -----------------------
   else if (textId == 2) {
-	 
 #ifdef GPS_ENABLED
-	  if (gHomePosSet) {
-			 pos = printText(gText[textId], pos, "\146");
-			 pos = printText(gText[textId], 2, "MT");
-			 pos = printNumber(gText[textId], 5 , gHomeDistance);
-		}
+	  if (gInfoShow) {
+	    if (gHomePosSet) {
+#ifdef STATISTICS_ENABLED
+		    pos = printText(gText[textId], 7, "LOS  SPD TRIP  ALT");
+#endif //STATISTICS_ENABLED
+	    }
 	    else if (gBlink1Hz) {
 	      pos = printText(gText[textId], 10, "NO HOME POS");
 	    }
-	
-	
+	  }
+	  else {
+		  //printCompassArrow(gText[textId], 7, gGpsLastValidData.angle, 19);
+	  }
 #endif //GPS_ENABLED
-  }
-  // --------------- TEXT LINE 4 (From top) -----------------------
+  }	  
   else if (textId == 3) {
 #ifdef GPS_ENABLED
-        printText(gText[textId], pos, "ALT"); //ALTITUDE
-/*	 if (altitudeArrow == 1) 
-	      pos = printText(gText[textId], 5, "\154");
-		  
-     else if (altitudeArrow == -1) 
-	      pos = printText(gText[textId], 5, "\155");
-	  
-		  
-	 else pos = printText(gText[textId], 5, "=");
-*/	 
-	
-		 pos = printNumber(gText[textId], 7 , gGpsLastValidData.pos.altitude - gHomePos.altitude); // Altitude
-	   		
-	  
-          pos = printText(gText[textId],TEXT_LINE_MAX_CHARS-8 , "HDG");
-		  pos = printNumber(gText[textId], TEXT_LINE_MAX_CHARS-4, gGpsLastValidData.angle);
-		 
-#endif //GPS_ENABLED	  
+	  if (gInfoShow) {
+	    if (gHomePosSet) {
+#ifdef STATISTICS_ENABLED
+		    pos = 7;
+		    printNumber(gText[textId], pos, gStatMaxDistance);
+		    printNumber(gText[textId], pos+5, gStatMaxSpeed);
+		    printNumber(gText[textId], pos+9, gStatDistTraveled);
+		    printNumber(gText[textId], pos+15, gStatMaxAltitude);
+#endif //STATISTICS_ENABLED
+	    }
+	    else {
+        pos = printGpsNumber(gText[textId], pos+4, gGpsLastValidData.pos.latitude, 1);
+        pos = printGpsNumber(gText[textId], pos+2, gGpsLastValidData.pos.longitude, 0);
+	    }
+	  }
+	  else {
+		  //printCompass(gText[textId], 7, gGpsLastValidData.angle, 19);
+	  }
+#endif //GPS_ENABLED
 	}
-	// --------------- TEXT LINE 5 (From top) -----------------------
 	else if (textId == 4) {
 #ifdef GPS_ENABLED
-
-	    pos = printNumber(gText[textId], 0, gGpsLastValidData.speed); // Speed
-			
-        pos = printText(gText[textId],5 , "KM/H");
-		 
+    if (!gAlarmSpeed || gBlink1Hz) {
+	    pos = printNumber(gText[textId], 0, gGpsLastValidData.speed);
+	  }		
+    if (!gHomePosSet) {
+		  pos = printText(gText[textId], 5, "-");
+	  }
+	  else {
+		  if (!gAlarmDistance || gBlink1Hz) {
+		    pos = printNumber(gText[textId], 5, gHomeDistance);
+		  }			
+	  }		  
+		if (gGpsLastValidData.fix) {
+		  pos = printNumber(gText[textId], TEXT_LINE_MAX_CHARS-10, gGpsLastValidData.sats);
+		}
+		else {			
+		  pos = printText(gText[textId], TEXT_LINE_MAX_CHARS-10, "-");
+	  }
+	  if (!gAlarmAltitude || gBlink1Hz) {
+		  pos = printNumber(gText[textId], TEXT_LINE_MAX_CHARS-5, gGpsLastValidData.pos.altitude - gHomePos.altitude);
+	  }		  
 #endif //GPS_ENABLED
-
-#ifdef TIME_HOUR_ENABLED
-	  pos = printTime(gText[textId], TEXT_LINE_MAX_CHARS-9); // Time with hours
-#else
-    pos = printTime(gText[textId], TEXT_LINE_MAX_CHARS-6); // Time without hours
-#endif //TIME_HOUR_ENABLED
 	}
-	// --------------- TEXT LINE 6 (From top) -----------------------
 	else if (textId == 5) {
-
-//  pos =  printText(gText[textId], 0, TEXT_CALL_SIGN); // Call sign
-//	pos = printText(gText[textId],TEXT_LINE_MAX_CHARS-9 , "FPVLR.COM");
-
-
+#ifdef GPS_ENABLED
+		pos = printText(gText[textId], 0, "SPD");
+		pos = printText(gText[textId], 5, "LOS");
+		
+		if (gHomePosSet) {
+		  pos = printText(gText[textId], pos+3, "\146");
+		}
+		else {
+			pos = printText(gText[textId], pos+3, "\147");
+		}
+		
+		pos = printText(gText[textId], TEXT_LINE_MAX_CHARS-10, "\150");
+		pos = printText(gText[textId], TEXT_LINE_MAX_CHARS-5, "ALT");
+		//pos = printText(gText[textId], pos-2, "\144-\145");
+#endif //GPS_ENABLED
 	}
-
+	else {		
+		pos = printText(gText[textId], pos, "T:");
+		pos = printText(gText[textId], TEXT_LINE_MAX_CHARS-1-4, "V:");
+		pos = printNumber(gText[textId], pos+1, textId + 1);
+	}
 }
 #endif //TEXT_ENABLED
 

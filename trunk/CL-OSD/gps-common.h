@@ -1,5 +1,5 @@
 /*cl-osd - A simple open source osd for e-osd and g-osd
-Copyright (C) 2011 Carl Ljungström
+Copyright (C) 2011 Carl LjungstrÃ¶m
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -22,11 +22,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.*
 
 #ifdef GPS_ENABLED
 
-static int8_t altitudeArrow = 0;
 static TGpsData gGpsLastValidData = {};
 static uint8_t gGpsValidData = 0;
 static TGpsData gGpsLastData = {};
 static TTime gLastFix = {};
+static RateofClimb = 0;
+static Persist =0;
 
 static void setupGps() {
 	// USART setup
@@ -37,29 +38,52 @@ static void setupGps() {
 }
 
 static void setHomePos() {
-
+#ifdef STATISTICS_ENABLED	
+	resetStatistics();
+#endif //STATISTICS_ENABLED
 	gHomePos = gGpsLastValidData.pos;
 	gHomePosSet = 1;
 }
 
-
+#ifdef STATISTICS_ENABLED
+static void updateDistanceTraveled() {
+	TGpsPos last = gGpsLastValidData.pos;
+	TGpsPos current = gGpsLastData.pos;
+	if (last.latitude != current.latitude || last.longitude != current.longitude) {
+	  uint32_t distance;
+    calcHome(last.latitude, last.longitude, current.latitude, current.longitude, &distance, NULL);
+	  gStatDistTraveled += distance;
+	}	  
+}
+#endif //STATISTICS_ENABLED
 
 static void finishGpsDecoding() {
-	
-if (gGpsLastData.pos.altitude > gGpsLastValidData.pos.altitude) 
-altitudeArrow = 1;
-		
-else if (gGpsLastData.pos.altitude < gGpsLastValidData.pos.altitude)
-altitudeArrow = -1;
-
-
 	if (gGpsLastData.checksumValid != 0) {
+#ifdef STATISTICS_ENABLED
+		updateDistanceTraveled();
+#endif //STATISTICS_ENABLED    
+  		if (gGpsLastData.pos.altitude > gGpsLastValidData.pos.altitude) 
+			RateofClimb = 1;
+		
+			else if (gGpsLastData.pos.altitude < gGpsLastValidData.pos.altitude)
+			RateofClimb = -1;
+		
+			else {
+				if (Persist > 10) {
+				RateofClimb = 0;
+				Persist = 0;
+							}
+			else Persist += 1;
+			}
 
 		gGpsLastValidData = gGpsLastData;
 		gGpsValidData = 1;
 		gLastFix = gTime;
 		
-		
+		if (gGpsLastValidData.speed >= STATISTICS_MIN_SPEED_SHOW) {
+			gStatisticsShow = 0;
+			gStatisticsShowCount = 0;
+		}			
 
 		if (gHomePosSet == 0) {
 			if (gGpsLastValidData.fix != 0) {
@@ -80,7 +104,16 @@ altitudeArrow = -1;
 #endif //HOME_AUTO_SET
       }
 		}	  
-
+#ifdef STATISTICS_ENABLED		
+		else {
+			if (gGpsLastValidData.speed > gStatMaxSpeed) {
+          gStatMaxSpeed = gGpsLastValidData.speed;
+			}
+			if (gGpsLastValidData.pos.altitude - gHomePos.altitude > gStatMaxAltitude) {
+          gStatMaxAltitude = gGpsLastValidData.pos.altitude - gHomePos.altitude;
+			}
+		}
+#endif //STATISTICS_ENABLED
 	}		  
 }
 

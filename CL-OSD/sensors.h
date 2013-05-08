@@ -53,11 +53,11 @@ static uint8_t calcGenericVoltageLevel(uint8_t adcInput, uint16_t inMin, uint16_
 	return level;
 }
 
-/*static uint8_t calcGenericVoltageLevelReverse(uint8_t adcInput, uint16_t inMin, uint16_t inMax, uint16_t outMin, uint16_t outMax) {
+static uint8_t calcGenericVoltageLevelReverse(uint8_t adcInput, uint16_t inMin, uint16_t inMax, uint16_t outMin, uint16_t outMax) {
 	uint16_t value = calcGenericVoltageLevel(adcInput, inMin, inMax, outMin, outMax);
 	return outMax - value + outMin;
 }
-*/
+
 static void updateSensors() {
 #ifdef SENSOR_VOLTAGE_1_ENABLED
     gSensorVoltage1 = gAnalogInputs[ANALOG_IN_1];

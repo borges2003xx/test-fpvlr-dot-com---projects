@@ -24,12 +24,12 @@ static uint8_t gAlarmBatt1 = 0;
 static uint8_t gAlarmBatt2 = 0;
 #endif
 static uint8_t gAlarmRssi = 0;
-static uint8_t gAlarmCurrent = 0;
-static uint8_t gAlarmPowerUsage = 0;
+//static uint8_t gAlarmCurrent = 0;
+//static uint8_t gAlarmPowerUsage = 0;
 #ifdef GPS_ENABLED
-static uint16_t gAlarmSpeed = 0;
-static uint16_t gAlarmDistance = 0;
-static uint16_t gAlarmAltitude = 0;
+//static uint16_t gAlarmSpeed = 0;
+//static uint16_t gAlarmDistance = 0;
+//static uint16_t gAlarmAltitude = 0;
 #endif //GPS_ENABLED
 
 #ifdef ALARM_ENABLED

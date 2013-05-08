@@ -123,10 +123,8 @@ static void updateText(uint8_t textId) {
 		  
      else if (altitudeArrow == -1) 
 	      pos = printText(gText[textId], 5, "\155");
-	  
 		  
-	 else pos = printText(gText[textId], 5, "=");
-*/	 
+	 else pos = printText(gText[textId], 5, "=");*/
 	
 		 pos = printNumber(gText[textId], 7 , gGpsLastValidData.pos.altitude - gHomePos.altitude); // Altitude
 	   		
@@ -155,8 +153,8 @@ static void updateText(uint8_t textId) {
 	// --------------- TEXT LINE 6 (From top) -----------------------
 	else if (textId == 5) {
 
-    pos =  printText(gText[textId], 0, TEXT_CALL_SIGN); // Call sign
-	pos = printText(gText[textId],TEXT_LINE_MAX_CHARS-9 , "FPVLR.COM");
+//    pos =  printText(gText[textId], 0, TEXT_CALL_SIGN); // Call sign
+//    pos = printText(gText[textId],TEXT_LINE_MAX_CHARS-9 , "FPVLR.COM");
 
 
 	}

@@ -124,13 +124,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.*
 //GPS
 #define GPS_GOOGLE_FORMAT 
 //#define GPS_DIYD //Use DIYD/APM binary protocol (Thanks to David Collett)
-#define FUDGE_GOOGLE_LAT 5197 //Local calibration of Google GPS Lat, a difference of 100 ~ 30' (Truglodite=7540)
-#define FUDGE_GOOGLE_LON 7632 //Local calibration of Google GPS Long, a difference of 100 ~ 30'  (Truglodite=4280)
+#define FUDGE_GOOGLE_LAT -5197 //Local calibration of Google GPS Lat, a difference of 100 ~ 30' (Truglodite=7540)
+#define FUDGE_GOOGLE_LON -7632 //Local calibration of Google GPS Long, a difference of 100 ~ 30'  (Truglodite=4280)
 #define FUDGE_GPS_ALT 0 //Local calibration of Altitude (Truglodite)
 #define SHOW_GPS_IN_FLIGHT //** Always display coords, to recover lost aircraft (cannot be used together with TEXT_COMPASS_ENABLED)
 
 //User data
-#define TEXT_CALL_SIGN "" //Set this to your call sign.
+#define TEXT_CALL_SIGN "r111-16" //Set this to your call sign.
 
 //VBI (Only for evaluation and development, not finished!)
 //#define VBI_TESTING_ENABLED

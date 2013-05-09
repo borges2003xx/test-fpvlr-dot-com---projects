@@ -25,3 +25,8 @@ la r18 :post prova campo si reininizia a costruire. si parte dalla r9 che e' una
 la r20 e' una r19 con le coordinate gps corrette dalla correzione di dispetto. e' una r111-2.0.1
 ----
 la r23 e una versione r69-2.0 di irun4fun compilata con il 5.1 -Os
+----
+----
+----
+  
+*r25 partendo dalla r111-2.0.2 abbiamo ricompilato con la variante -O2, sacrificando  l'rssi per acquistare velocita' di ottimizzazione. Le coordinate gps sono adesso corrette. bivio 1. compilato con studio 6*

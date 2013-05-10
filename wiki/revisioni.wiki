@@ -30,3 +30,5 @@ la r23 e una versione r69-2.0 di irun4fun compilata con il 5.1 -Os
 ----
   
 *r25 partendo dalla r111-2.0.2 abbiamo ricompilato con la variante -O2, sacrificando  l'rssi per acquistare velocita' di ottimizzazione. Le coordinate gps sono adesso corrette. bivio 1. compilato con studio 6*
+----
+r26 parte da r69-2.0 della r23 e si trasforma nella r69-2.0.1 compilata con studio 6 a -O2
